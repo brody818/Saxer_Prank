@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saxer Prank</title>
     <style>
         body {
             font-family: sans-serif;
@@ -9,12 +13,12 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #000000; /* Change this if a different background color is desired */
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #d60303;
             color: white;
             border: none;
             cursor: pointer;
@@ -23,30 +27,31 @@
         #status {
             margin-top: 20px;
             font-size: 18px;
+            color: rgb(255, 255, 255); /* Ensure the status text is visible on a black background */
         }
+        h1 {
+            color: rgb(255, 255, 255);
+        }
+        
     </style>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saxer Prank</title>
 </head>
 <body>
-    <h1> Saxer Prank</h1>
+    <h1>Saxer Prank</h1>
     <button class="btn">Start Recognition</button>
+    <div id="status"></div>
     
+    <script>
+        const button = document.querySelector('.btn');
+        const status = document.getElementById('status');
+
+        button.addEventListener('click', () => {
+            button.disabled = true;
+            status.textContent = 'Recognition started...';
+            setTimeout(() => {
+                status.textContent = 'Recognition stopped.';
+                button.disabled = false;
+            }, 20000); // Simulate a 20-second recognition process
+        });
+    </script>
 </body>
-
-<script>
-    const button = document.querySelector('.btn');
-    const status = document.getElementById('status');
-
-    button.addEventListener('click', () => {
-        button.disabled = true;
-        status.textContent = 'Recognition started...';
-        setTimeout(() => {
-            status.textContent = 'Recognition stopped.';
-            button.disabled = false;
-        }, 5000); // Simulate a 20-second recognition process
-    });
-</script>
-    </html>
+</html>
