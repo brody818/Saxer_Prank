@@ -35,4 +35,18 @@
     <button class="btn">Start Recognition</button>
     
 </body>
-</html>
+
+<script>
+    const button = document.querySelector('.btn');
+    const status = document.getElementById('status');
+
+    button.addEventListener('click', () => {
+        button.disabled = true;
+        status.textContent = 'Recognition started...';
+        setTimeout(() => {
+            status.textContent = 'Recognition stopped.';
+            button.disabled = false;
+        }, 5000); // Simulate a 5-second recognition process
+    });
+</script>
+    </html>
