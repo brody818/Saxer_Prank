@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    </style>
+</head>
+<body>
+    <h1>Voice Recognition</h1>
+    <button class="btn">Start Recognition</button>
+    <div id="status"></div>
+    <div id="output"></div>
+    
+    <script>
+        const button = document.querySelector('.btn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        let recognition;
+        let isRecording = false;
+        let transcribedText = '';
+
+        // Check if the browser supports Speech Recognition
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Sorry, your browser does not support Speech Recognition.');
+        } else {
+            // Initialize the SpeechRecognition object
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true; // Keeps listening until stopped
+            recognition.interimResults = true; // Display intermediate results (optional)
+            recognition.lang = 'en-US'; // Set language to English
+
+            // When speech is recognized
+            recognition.onresult = function(event) {
+                let result = event.results[event.results.length - 1];
+                let transcript = result[0].transcript;
+                if (result.isFinal) {
+                    transcribedText += transcript + ' '; // Add the final part of speech to transcribedText
+                } else {
+                    // Display live, partial transcription
+                    output.textContent = transcribedText + transcript;
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.onend = function() {
+                status.textContent = 'Recognition stopped.';
+                button.disabled = false;
+                button.textContent = 'Start Recognition';
+                isRecording = false;
+            };
+        }
+
+        // Button click event to start/stop recognition
+        button.addEventListener('click', () => {
+            if (!isRecording) {
+                isRecording = true;
+                button.disabled = true;
+                button.textContent = 'Recording...';
+                status.textContent = 'Speak now, and your speech will be transcribed below.';
+                transcribedText = '';  // Clear previous transcription
+                output.textContent = '';  // Clear the output field
+                recognition.start();  // Start the recognition
+            } else {
+                isRecording = false;
+                recognition.stop();  // Stop the recognition
+                button.disabled = false;
+                button.textContent = 'Start Recognition';
+            }
+        });
+    </script>
+  </body>
+</html>
