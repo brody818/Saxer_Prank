@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    </style>
-</head>
-<body>
+    <title>Voice Recognition with Ding Sound</title>
+  </head>
+  <body>
     <h1>Voice Recognition</h1>
     <button class="btn">Start Recognition</button>
     <div id="status"></div>
     <div id="output"></div>
-    
+
+    <!-- Add an input field where user can type -->
+    <input type="text" id="inputField" placeholder="Type 'ok' or 'okay' to hear sound" />
+
     <script>
         const button = document.querySelector('.btn');
         const status = document.getElementById('status');
@@ -67,24 +70,26 @@
                 button.disabled = false;
                 button.textContent = 'Start Recognition';
             }
-    });
-</script>
-<script>
-    // Define the sound
-    const dingSound = new Audio('https://www.youtube.com/watch?v=GVAF07-2Xic');
-    // Set the volume (0.0 to 100)
-    // Get the input field element
-    const inputField = document.getElementById('inputField');
+        });
+    </script>
 
-    // Function to detect the words and play the sound
-    inputField.addEventListener('input', function() {
-        const inputValue = inputField.value.toLowerCase();
+    <script>
+        // Define the sound (make sure the path to your audio is correct)
+        const dingSound = new Audio('audio\dingsound.mp3'); // Path to your sound file
 
-        // Check if the input contains "ok" or "okay"
-        if (inputValue.includes('ok') || inputValue.includes('okay')) {
-            dingSound.play();
-        }
-    });
-</script>
+        // Get the input field element
+        const inputField = document.getElementById('inputField');
+
+        // Function to detect the words and play the sound
+        inputField.addEventListener('input', function() {
+            const inputValue = inputField.value.toLowerCase();
+
+            // Check if the input contains "ok" or "okay"
+            if (inputValue.includes('ok') || inputValue.includes('okay')) {
+                dingSound.play(); // Play the sound
+            }
+        });
+    </script>
   </body>
 </html>
+
