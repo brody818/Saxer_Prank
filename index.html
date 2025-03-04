@@ -32,7 +32,6 @@
         h1 {
             color: rgb(255, 255, 255);
         }
-        
     </style>
 </head>
 <body>
@@ -41,18 +40,22 @@
     <div id="status"></div>
     
     <script>
+        const disabled = false
         const button = document.querySelector('.btn');
         const status = document.getElementById('status');
-
         button.addEventListener('click', () => {
-            button.disabled = true;
-            status.textContent = 'Recognition started...';
-            setTimeout(() => {
+            if (disabled == false) {
+                status.textContent = 'Recognition started...';
+                disabled = true;
+                setTimeout(() => {
+                    status.textContent = 'Recognition stopped.';
+                    disabled = false;
+                }, 2000); // Simulate a 20-second recognition process
+            } else {
                 status.textContent = 'Recognition stopped.';
-                button.disabled = false;
-            }, 20000); // Simulate a 20-second recognition process
-        });
-            
+                disabled = false
+            }
+        }); 
     </script>
 </body>
 </html>
