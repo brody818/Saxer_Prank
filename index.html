@@ -41,22 +41,25 @@
     <div id="status"></div>
     
     <script>
-         disabled = false
+         disabled = true
         const button = document.querySelector('.btn');
         const status = document.getElementById('status');
         button.addEventListener('click', () => {
-            if (disabled == false) {
+            if (disabled == true) {
                 status.textContent = 'Recognition started...';
-                disabled = true;
+                disabled = false;
                 setTimeout(() => {
                     status.textContent = 'Recognition stopped.';
-                    disabled = false;
+                    disabled = true;
                 }, 2000); // Simulate a 20-second recognition process
             } else {
                 status.textContent = 'Recognition stopped.';
-                disabled = false
+                disabled = true
             }
-        }); 
+        });
+
+        src=""
+
     </script>
 </body>
 </html>
