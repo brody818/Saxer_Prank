@@ -33,14 +33,15 @@
             color: rgb(255, 255, 255);
         }
     </style>
+    <script> src ="app.js"</script>
 </head>
 <body>
     <h1>Saxer Prank</h1>
-    <button class="btn">Start Recognition</button>
+    <button class="btn" id="button">Start Recognition</button>
     <div id="status"></div>
     
     <script>
-        const disabled = false
+         disabled = false
         const button = document.querySelector('.btn');
         const status = document.getElementById('status');
         button.addEventListener('click', () => {
