@@ -1,117 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Speech Recognition Example</title>
+    <title>Voice Recognition</title>
 </head>
 <body>
-  <h1>Speech Recognition Example</h1>
-  <button id="startBtn">Start Recognition</button>
-  <p id="output">Your speech will appear here...</p>
-
-  <script>
-    // Check if the browser supports the SpeechRecognition API
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    <h1>Voice Recognition</h1>
+    <button class="btn">Start Recognition</button>
+    <div id="status"></div>
+    <div id="output"></div>
     
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-  
-      recognition.onresult = async function (event) {
-        console transcript = event.results[0][0].transcript; 
-        console.log(event);
+    <script>
+        const button = document.querySelector('.btn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        let recognition;
+        let isRecording = false;
+        let transcribedText = '';
 
-        
-      }
-      recognition.startBtn.addEventListener('click', function() {
-        recognition.start(); // Start the speech recognition
-        document.getElementById('output').textContent = 'Listening...';
-      });
-      
-      // Configure the SpeechRecognition settings
-      recognition.lang = 'en-US';  // Language: English (US)
-      recognition.interimResults = true;  // Allow showing partial results
-      recognition.maxAlternatives = 1;  // Limit to one alternative result
+        // Check if the browser supports Speech Recognition
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Sorry, your browser does not support Speech Recognition.');
+        } else {
+            // Initialize SpeechRecognition object
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
 
-      // Store transcribed text
-      let transcribedText = ''; // This will hold the speech text
-      let lastTranscribedText = ''; // This will store the last transcribed text to avoid repetition
+            recognition.onresult = function(event) {
+                let result = event.results[event.results.length - 1];
+                let transcript = result[0].transcript.toLowerCase(); // Convert to lowercase for easier comparison
 
-      // Display the recognition status
-      recognition.onstart = function() {
-        document.getElementById('output').textContent = 'Listening...';
-      };
+                if (result.isFinal) {
+                    transcribedText += transcript + ' ';
+                    output.textContent = transcribedText; 
 
-      // Handle speech recognition results
-      recognition.onresult = function(event) {
-        let transcript = '';
+                    // Check for "ok" or "okay" and stop recognition
+                    if (transcript.includes("ok") || transcript.includes("okay")) {
+                        stopRecognition();
+                    }
+                } else {
+                    output.textContent = transcribedText + transcript;
+                }
+            };
 
-        // Loop through all results and concatenate them into one transcript
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.onend = function() {
+                status.textContent = 'Recognition stopped.';
+                button.disabled = false;
+                button.textContent = 'Start Recognition';
+                isRecording = false;
+            };
         }
 
-        // Avoid repeating the same transcript (check if it's new)
-        let sentenceHistory = []; // Array to store last 5 sentences
-
-// Function to check if any words in the new sentence were used in the last 5 sentences
-function hasRepeatedWords(sentence) {
-  const wordsInHistory = new Set(); // Store words from the last 5 sentences
-
-  // Add words from the last 5 sentences to the set
-  sentenceHistory.forEach((sentence) => {
-    sentence.split(' ').forEach((word) => {
-      wordsInHistory.add(word.toLowerCase()); // Convert to lowercase to avoid case sensitivity
-    });
-  });
-
-  // Check if any word in the current sentence is repeated
-  const wordsInCurrentSentence = sentence.split(' ');
-  for (const word of wordsInCurrentSentence) {
-    if (wordsInHistory.has(word.toLowerCase())) {
-      return true; // If a word is found in the history, return true
-    }
-  }
-  return false; // No repetition found
-}
-
-// Example usage inside the recognition result:
-if (transcript.trim() !== lastTranscribedText.trim()) {
-  if (!hasRepeatedWords(transcript)) {
-    transcribedText += transcript + ' ';
-    lastTranscribedText = transcript.trim();
-
-    // Add the sentence to the history
-    sentenceHistory.push(transcript.trim());
-
-    // Keep only the last 5 sentences in the history
-    if (sentenceHistory.length > 5) {
-      sentenceHistory.shift(); // Remove the oldest sentence if we have more than 5
-    }
-
-    // Display the current transcription
-    document.getElementById('output').textContent = 'You said: ' + transcribedText;
-  } else {
-    document.getElementById('output').textContent = 'Repetition detected, ignoring sentence.';
-  }
-}
-
-          // Display the current transcription
-          document.getElementById('output').textContent = 'You said: ' + transcribedText;
-
-          // Check if the transcript contains "ok" or "okay" and stop recognition
-          if (transcript.toLowerCase().includes("ok") || transcript.toLowerCase().includes("okay")) {
-            recognition.stop(); // Stop listening if "ok" or "okay" is detected
-            document.getElementById('output').textContent = 'Recognition stopped. You said: ' + transcribedText;
-          }
+        // Function to start recognition
+        function startRecognition() {
+            isRecording = true;
+            button.disabled = true;
+            button.textContent = 'Recording...';
+            status.textContent = 'Listening...';
+            transcribedText = '';  
+            output.textContent = '';  
+            recognition.start();
         }
-      };
 
-      // Handle recognition end
-      recognition.onend = function() {
-        document.getElementById('output').textContent += ' (Stopped)';
-      };
-    }
-  </script>
+        // Function to stop recognition
+        function stopRecognition() {
+            recognition.stop();
+            status.textContent = 'Detected "ok" or "okay". Stopping recognition...';
+        }
+
+        // Button click event to start/stop recognition
+        button.addEventListener('click', () => {
+            if (!isRecording) {
+                startRecognition();
+            } else {
+                stopRecognition();
+            }
+        });
+    </script>
 </body>
 </html>
+
