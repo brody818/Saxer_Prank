@@ -1,95 +1,117 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Voice Recognition with Ding Sound</title>
-  </head>
-  <body>
-    <h1>Voice Recognition</h1>
-    <button class="btn">Start Recognition</button>
-    <div id="status"></div>
-    <div id="output"></div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech Recognition Example</title>
+</head>
+<body>
+  <h1>Speech Recognition Example</h1>
+  <button id="startBtn">Start Recognition</button>
+  <p id="output">Your speech will appear here...</p>
 
-    <!-- Add an input field where user can type -->
-    <input type="text" id="inputField" placeholder="Type 'ok' or 'okay' to hear sound" />
+  <script>
+    // Check if the browser supports the SpeechRecognition API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+  
+      recognition.onresult = async function (event) {
+        console transcript = event.results[0][0].transcript; 
+        console.log(event);
 
-    <script>
-        const button = document.querySelector('.btn');
-        const status = document.getElementById('status');
-        const output = document.getElementById('output');
-        let recognition;
-        let isRecording = false;
-        let transcribedText = '';
+        
+      }
+      recognition.startBtn.addEventListener('click', function() {
+        recognition.start(); // Start the speech recognition
+        document.getElementById('output').textContent = 'Listening...';
+      });
+      
+      // Configure the SpeechRecognition settings
+      recognition.lang = 'en-US';  // Language: English (US)
+      recognition.interimResults = true;  // Allow showing partial results
+      recognition.maxAlternatives = 1;  // Limit to one alternative result
 
-        // Check if the browser supports Speech Recognition
-        if (!('webkitSpeechRecognition' in window)) {
-            alert('Sorry, your browser does not support Speech Recognition.');
-        } else {
-            // Initialize the SpeechRecognition object
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = true; // Keeps listening until stopped
-            recognition.interimResults = true; // Display intermediate results (optional)
-            recognition.lang = 'en-US'; // Set language to English
+      // Store transcribed text
+      let transcribedText = ''; // This will hold the speech text
+      let lastTranscribedText = ''; // This will store the last transcribed text to avoid repetition
 
-            // When speech is recognized
-            recognition.onresult = function(event) {
-                let result = event.results[event.results.length - 1];
-                let transcript = result[0].transcript;
-                if (result.isFinal) {
-                    transcribedText += transcript + ' '; // Add the final part of speech to transcribedText
-                } else {
-                    // Display live, partial transcription
-                    output.textContent = transcribedText + transcript;
-                }
-            };
+      // Display the recognition status
+      recognition.onstart = function() {
+        document.getElementById('output').textContent = 'Listening...';
+      };
 
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error:', event.error);
-            };
+      // Handle speech recognition results
+      recognition.onresult = function(event) {
+        let transcript = '';
 
-            recognition.onend = function() {
-                status.textContent = 'Recognition stopped.';
-                button.disabled = false;
-                button.textContent = 'Start Recognition';
-                isRecording = false;
-            };
+        // Loop through all results and concatenate them into one transcript
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
         }
 
-        // Button click event to start/stop recognition
-        button.addEventListener('click', () => {
-            if (!isRecording) {
-                isRecording = true;
-                button.disabled = true;
-                button.textContent = 'Recording...';
-                status.textContent = 'Speak now, and your speech will be transcribed below.';
-                transcribedText = '';  // Clear previous transcription
-                output.textContent = '';  // Clear the output field
-                recognition.start();  // Start the recognition
-            } else {
-                isRecording = false;
-                recognition.stop();  // Stop the recognition
-                button.disabled = false;
-                button.textContent = 'Start Recognition';
-            }
-        });
-    </script>
+        // Avoid repeating the same transcript (check if it's new)
+        let sentenceHistory = []; // Array to store last 5 sentences
 
-    <script>
-        // Define the sound (make sure the path to your audio is correct)
-        const dingSound = new Audio('audio\dingsound.mp3'); // Path to your sound file
+// Function to check if any words in the new sentence were used in the last 5 sentences
+function hasRepeatedWords(sentence) {
+  const wordsInHistory = new Set(); // Store words from the last 5 sentences
 
-        // Get the input field element
-        const inputField = document.getElementById('inputField');
+  // Add words from the last 5 sentences to the set
+  sentenceHistory.forEach((sentence) => {
+    sentence.split(' ').forEach((word) => {
+      wordsInHistory.add(word.toLowerCase()); // Convert to lowercase to avoid case sensitivity
+    });
+  });
 
-        // Function to detect the words and play the sound
-        inputField.addEventListener('input', function() {
-            const inputValue = inputField.value.toLowerCase();
+  // Check if any word in the current sentence is repeated
+  const wordsInCurrentSentence = sentence.split(' ');
+  for (const word of wordsInCurrentSentence) {
+    if (wordsInHistory.has(word.toLowerCase())) {
+      return true; // If a word is found in the history, return true
+    }
+  }
+  return false; // No repetition found
+}
 
-            // Check if the input contains "ok" or "okay"
-            if (inputValue.includes('ok') || inputValue.includes('okay')) {
-                dingSound.play(); // Play the sound
-            }
-        });
-    </script>
-  </body>
+// Example usage inside the recognition result:
+if (transcript.trim() !== lastTranscribedText.trim()) {
+  if (!hasRepeatedWords(transcript)) {
+    transcribedText += transcript + ' ';
+    lastTranscribedText = transcript.trim();
+
+    // Add the sentence to the history
+    sentenceHistory.push(transcript.trim());
+
+    // Keep only the last 5 sentences in the history
+    if (sentenceHistory.length > 5) {
+      sentenceHistory.shift(); // Remove the oldest sentence if we have more than 5
+    }
+
+    // Display the current transcription
+    document.getElementById('output').textContent = 'You said: ' + transcribedText;
+  } else {
+    document.getElementById('output').textContent = 'Repetition detected, ignoring sentence.';
+  }
+}
+
+          // Display the current transcription
+          document.getElementById('output').textContent = 'You said: ' + transcribedText;
+
+          // Check if the transcript contains "ok" or "okay" and stop recognition
+          if (transcript.toLowerCase().includes("ok") || transcript.toLowerCase().includes("okay")) {
+            recognition.stop(); // Stop listening if "ok" or "okay" is detected
+            document.getElementById('output').textContent = 'Recognition stopped. You said: ' + transcribedText;
+          }
+        }
+      };
+
+      // Handle recognition end
+      recognition.onend = function() {
+        document.getElementById('output').textContent += ' (Stopped)';
+      };
+    }
+  </script>
+</body>
 </html>
-
