@@ -6,11 +6,13 @@
 <body>
     <h1>Voice Recognition</h1>
     <button class="btn">Start Recognition</button>
+    <button class="stop-btn">Stop Recording</button>
     <div id="status"></div>
     <div id="output"></div>
     
     <script>
         const button = document.querySelector('.btn');
+        const stopButton = document.querySelector('.stop-btn');
         const status = document.getElementById('status');
         const output = document.getElementById('output');
         let recognition;
@@ -29,11 +31,16 @@
 
             recognition.onresult = function(event) {
                 let result = event.results[event.results.length - 1];
-                let transcript = result[0].transcript;
+                let transcript = result[0].transcript.toLowerCase(); // Convert to lowercase for easier comparison
 
                 if (result.isFinal) {
                     transcribedText += transcript + ' ';
-                    output.textContent = transcribedText; // Ensure final transcription is shown
+                    output.textContent = transcribedText; 
+
+                    // Check for "ok" or "okay" and stop recognition
+                    if (transcript.includes("ok") || transcript.includes("okay")) {
+                        stopRecognition();
+                    }
                 } else {
                     output.textContent = transcribedText + transcript;
                 }
@@ -45,26 +52,41 @@
 
             recognition.onend = function() {
                 status.textContent = 'Recognition stopped.';
-                button.disabled = false;
                 button.textContent = 'Start Recognition';
                 isRecording = false;
             };
         }
 
-        // Button click event to start/stop recognition
+        // Function to start recognition
+        function startRecognition() {
+            isRecording = true;
+            button.textContent = 'Recording...';
+            status.textContent = 'Listening...';
+            transcribedText = '';  
+            output.textContent = '';  
+            recognition.start();
+        }
+
+        // Function to stop recognition
+        function stopRecognition() {
+            if (isRecording) {
+                recognition.stop();
+                status.textContent = 'Recording stopped manually.';
+                isRecording = false;
+                button.textContent = 'Start Recognition';
+            }
+        }
+
+        // Button click events
         button.addEventListener('click', () => {
             if (!isRecording) {
-                isRecording = true;
-                button.disabled = true;
-                button.textContent = 'Recording...';
-                status.textContent = 'Listening...';
-                transcribedText = '';  // Clear previous transcription
-                output.textContent = '';  // Clear the output field
-                recognition.start();
+                startRecognition();
             } else {
-                recognition.stop();
+                stopRecognition();
             }
         });
+
+        stopButton.addEventListener('click', stopRecognition);
     </script>
 </body>
 </html>
