@@ -39,7 +39,7 @@
 
                     // Check for "ok" or "okay" and stop recognition
                     if (transcript.includes("ok") || transcript.includes("okay")) {
-                        stopRecognition();
+                        stopRecognition("Detected 'ok' or 'okay'. Stopping recognition...");
                     }
                 } else {
                     output.textContent = transcribedText + transcript;
@@ -68,10 +68,10 @@
         }
 
         // Function to stop recognition
-        function stopRecognition() {
+        function stopRecognition(message = 'Recording stopped manually.') {
             if (isRecording) {
                 recognition.stop();
-                status.textContent = 'Recording stopped manually.';
+                status.textContent = message;
                 isRecording = false;
                 button.textContent = 'Start Recognition';
             }
@@ -86,7 +86,7 @@
             }
         });
 
-        stopButton.addEventListener('click', stopRecognition);
+        stopButton.addEventListener('click', () => stopRecognition('Stopped by user.'));
     </script>
 </body>
 </html>
