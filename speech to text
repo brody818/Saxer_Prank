@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speech to Text with Emotion Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #output {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            min-height: 60px;
+        }
+
+        .emotion {
+            margin-top: 10px;
+            color: #555;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech to Text + Emotion Detection</h1>
+    <button id="start-btn">Start Recognition</button>
+    <button id="stop-btn">Stop Recognition</button>
+    <div id="status"></div>
+    <div id="output"></div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+
+        let recognition;
+        let isRecording = false;
+        let transcribedText = '';
+
+        // Check if speech recognition is supported
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Sorry, your browser does not support speech recognition. Please use Google Chrome.');
+        } else {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isRecording = true;
+                status.textContent = '🎙️ Listening...';
+                startBtn.textContent = 'Recording...';
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                status.textContent = 'Recognition stopped.';
+                startBtn.textContent = 'Start Recognition';
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                status.textContent = 'Error: ' + event.error;
+            };
+
+            recognition.onresult = (event) => {
+                let result = event.results[event.results.length - 1];
+                let transcript = result[0].transcript.toLowerCase();
+
+                if (result.isFinal) {
+                    transcribedText += transcript + ' ';
+                    updateOutput(transcribedText, detectEmotion(transcript));
+                } else {
+                    updateOutput(transcribedText + transcript);
+                }
+            };
+        }
+
+        function updateOutput(text, emotion = null) {
+            output.innerHTML = `<strong>Transcript:</strong> ${text}`;
+            if (emotion) {
+                const emotionDiv = document.createElement('div');
+                emotionDiv.className = 'emotion';
+                emotionDiv.innerHTML = `<strong>Detected Emotion:</strong> ${emotion}`;
+                output.appendChild(emotionDiv);
+            }
+        }
+
+        function detectEmotion(text) {
+            const emotions = {
+                happy: ["happy", "glad", "great", "joy", "awesome", "fantastic", "excited"],
+                sad: ["sad", "upset", "down", "unhappy", "depressed", "gloomy"],
+                angry: ["angry", "mad", "furious", "annoyed", "irritated"],
+                fear: ["scared", "afraid", "fear", "terrified", "nervous"],
+                surprise: ["surprised", "shocked", "amazed", "astonished"]
+            };
+
+            const detected = [];
+
+            for (let emotion in emotions) {
+                for (let word of emotions[emotion]) {
+                    if (text.includes(word)) {
+                        detected.push(emotion);
+                        break;
+                    }
+                }
+            }
+
+            return detected.length ? detected.join(', ') : 'Neutral';
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (!isRecording) {
+                transcribedText = '';
+                output.textContent = '';
+                recognition.start();
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (isRecording) {
+                recognition.stop();
+                status.textContent = 'Stopped by user.';
+            }
+        });
+    </script>
+</body>
+</html>
