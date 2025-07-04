@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Recognition</title>
+</head>
+<body>
+    <h1>Voice Recognition</h1>
+    <button class="btn">Start Recognition</button>
+    <button class="stop-btn">Stop Recording</button>
+    <div id="status"></div>
+    <div id="output"></div>
+    
+    <script>
+        const button = document.querySelector('.btn');
+        const stopButton = document.querySelector('.stop-btn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+        let recognition;
+        let isRecording = false;
+        let transcribedText = '';
+
+        // Check if the browser supports Speech Recognition
+        if (!('webkitSpeechRecognition' in window)) {
+            alert('Sorry, your browser does not support Speech Recognition.');
+        } else {
+            // Initialize SpeechRecognition object
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = function(event) {
+                let result = event.results[event.results.length - 1];
+                let transcript = result[0].transcript.toLowerCase(); // Convert to lowercase for easier comparison
+
+                if (result.isFinal) {
+                    transcribedText += transcript + ' ';
+                    output.textContent = transcribedText; 
+
+                    // Check for "ok" or "okay" and stop recognition
+                    if (transcript.includes("ok") || transcript.includes("okay")) {
+                        stopRecognition("Detected 'ok' or 'okay'. Stopping recognition...");
+                    }
+                } else {
+                    output.textContent = transcribedText + transcript;
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.onend = function() {
+                status.textContent = 'Recognition stopped.';
+                button.textContent = 'Start Recognition';
+                isRecording = false;
+            };
+        }
+
+        // Function to start recognition
+        function startRecognition() {
+            isRecording = true;
+            button.textContent = 'Recording...';
+            status.textContent = 'Listening...';
+            transcribedText = '';  
+            output.textContent = '';  
+            recognition.start();
+        }
+
+        // Function to stop recognition
+        function stopRecognition(message = 'Recording stopped manually.') {
+            if (isRecording) {
+                recognition.stop();
+                status.textContent = message;
+                isRecording = false;
+                button.textContent = 'Start Recognition';
+            }
+        }
+
+        // Button click events
+        button.addEventListener('click', () => {
+            if (!isRecording) {
+                startRecognition();
+            } else {
+                stopRecognition();
+            }
+        });
+
+        stopButton.addEventListener('click', () => stopRecognition('Stopped by user.'));
+    </script>
+</body>
+</html>
