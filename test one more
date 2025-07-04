@@ -1,15 +1,42 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
-    <title>Voice Recognition</title>
+    <title>Voice Recognition with Emotion Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .btn, .stop-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+        }
+        .emotion {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Voice Recognition</h1>
+    <h1>Voice Recognition with Emotion Detection</h1>
     <button class="btn">Start Recognition</button>
     <button class="stop-btn">Stop Recording</button>
-    <div id="status"></div>
+    <div id="status">Click "Start Recognition" to begin.</div>
     <div id="output"></div>
-    
+
     <script>
         const button = document.querySelector('.btn');
         const stopButton = document.querySelector('.stop-btn');
@@ -19,11 +46,9 @@
         let isRecording = false;
         let transcribedText = '';
 
-        // Check if the browser supports Speech Recognition
         if (!('webkitSpeechRecognition' in window)) {
             alert('Sorry, your browser does not support Speech Recognition.');
         } else {
-            // Initialize SpeechRecognition object
             recognition = new webkitSpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
@@ -31,13 +56,14 @@
 
             recognition.onresult = function(event) {
                 let result = event.results[event.results.length - 1];
-                let transcript = result[0].transcript.toLowerCase(); // Convert to lowercase for easier comparison
+                let transcript = result[0].transcript.toLowerCase();
 
                 if (result.isFinal) {
                     transcribedText += transcript + ' ';
-                    output.textContent = transcribedText; 
+                    output.textContent = transcribedText;
 
-                    // Check for "ok" or "okay" and stop recognition
+                    analyzeEmotion(transcript);
+
                     if (transcript.includes("ok") || transcript.includes("okay")) {
                         stopRecognition("Detected 'ok' or 'okay'. Stopping recognition...");
                     }
@@ -57,17 +83,15 @@
             };
         }
 
-        // Function to start recognition
         function startRecognition() {
             isRecording = true;
             button.textContent = 'Recording...';
             status.textContent = 'Listening...';
-            transcribedText = '';  
-            output.textContent = '';  
+            transcribedText = '';
+            output.textContent = '';
             recognition.start();
         }
 
-        // Function to stop recognition
         function stopRecognition(message = 'Recording stopped manually.') {
             if (isRecording) {
                 recognition.stop();
@@ -77,7 +101,6 @@
             }
         }
 
-        // Button click events
         button.addEventListener('click', () => {
             if (!isRecording) {
                 startRecognition();
@@ -87,6 +110,34 @@
         });
 
         stopButton.addEventListener('click', () => stopRecognition('Stopped by user.'));
+
+        // Basic emotion detection function
+        function analyzeEmotion(text) {
+            const emotions = {
+                happy: ["happy", "joy", "excited", "great", "wonderful", "love"],
+                sad: ["sad", "depressed", "down", "unhappy", "miserable"],
+                angry: ["angry", "mad", "furious", "annoyed"],
+                anxious: ["worried", "nervous", "anxious", "afraid", "scared"],
+                calm: ["calm", "relaxed", "peaceful", "chill"]
+            };
+
+            let detectedEmotion = "Neutral";
+
+            for (const [emotion, keywords] of Object.entries(emotions)) {
+                for (const word of keywords) {
+                    if (text.includes(word)) {
+                        detectedEmotion = emotion.charAt(0).toUpperCase() + emotion.slice(1);
+                        break;
+                    }
+                }
+                if (detectedEmotion !== "Neutral") break;
+            }
+
+            const emotionDisplay = document.createElement('div');
+            emotionDisplay.className = 'emotion';
+            emotionDisplay.innerHTML = `<strong>Emotion Detected:</strong> ${detectedEmotion}`;
+            output.appendChild(emotionDisplay);
+        }
     </script>
 </body>
 </html>

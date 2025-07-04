@@ -1,0 +1,61 @@
+ # karyotype_disease_checker.py
+
+def analyze_karyotype(karyotype):
+    errors = []
+
+    # Down syndrome (Trisomy 21)
+    chr_21 = karyotype.get(21, [])
+    if len(chr_21) == 3:
+        errors.append("Down syndrome detected (Trisomy 21).")
+    elif len(chr_21) != 2:
+        errors.append(f"Abnormal chromosome 21 count: {len(chr_21)}.")
+
+    # Sex chromosomes
+    x_count = len(karyotype.get('X', []))
+    y_count = len(karyotype.get('Y', []))
+
+    # Detect sex chromosome disorders
+    if x_count == 1 and y_count == 0:
+        errors.append("Turner syndrome detected (XO).")
+    elif x_count >= 2 and y_count == 1:
+        errors.append("Klinefelter syndrome detected (XXY or variants).")
+    elif x_count == 1 and y_count == 2:
+        errors.append("Jacob's syndrome detected (XYY).")
+    elif x_count == 3 and y_count == 0:
+        errors.append("Triple X syndrome detected (XXX).")
+    elif x_count == 1 and y_count == 1:
+        # Normal male (XY)
+        pass
+    elif x_count == 2 and y_count == 0:
+        # Normal female (XX)
+        pass
+    else:
+        errors.append(f"Unusual sex chromosome combination: X={x_count}, Y={y_count}")
+
+    return errors if errors else ["Normal: Karyotype appears normal."]
+
+
+def main():
+    # 🔬 Choose which condition to simulate by editing the karyotype below
+
+    karyotype = {
+        # Normal chromosomes 1–22
+        **{i: ["seq1", "seq2"] for i in range(1, 23)},
+        # 👇 Add/modify specific chromosomes to simulate conditions
+
+        # Example: Down syndrome (Trisomy 21)
+        21: ["seq1", "seq2" , "seq3"],  # Trisomy 21
+
+        # Sex chromosomes
+        'X': ["seq1"],  
+        'Y': ["seq1", "seq2"]  
+    }
+
+    result = analyze_karyotype(karyotype)
+    print(" Diagnosis Result:")
+    for line in result:
+        print(" -", line)
+
+
+if __name__ == "__main__":
+    main()
