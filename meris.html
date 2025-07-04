@@ -1,172 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Portal</title>
-  <style>
-    /* General styles */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f9f9f9;
-      color: #333;
-      scroll-behavior: smooth;
-    }
-    header {
-      background: #004080;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Portal</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin: 0;
+    background: #f9f9f9;
+    color: #333;
+    scroll-behavior: smooth;
+  }
+  header {
+    background: #0a0a0a;
+    color: white;
+    padding: 1.2rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  nav {
+    background: #1d1d1f;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 0;
+    position: sticky;
+    top: 56px; /* height of header */
+    z-index: 999;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+  nav a:hover, nav a:focus {
+    background-color: #0071e3;
+    color: white;
+    outline: none;
+  }
+  main {
+    max-width: 900px;
+    margin: 3rem auto 4rem;
+    background: white;
+    padding: 2rem 3rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 12px;
+  }
+  section {
+    margin-bottom: 4rem;
+  }
+  h2 {
+    color: #0071e3;
+    border-bottom: 4px solid #0071e3;
+    padding-bottom: 0.4rem;
+    margin-bottom: 1.6rem;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  /* Scholarships */
+  ul.scholarship-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  ul.scholarship-list li {
+    background: #f0f5ff;
+    margin: 1rem 0;
+    padding: 1.2rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0, 113, 227, 0.2);
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  a.apply-link {
+    display: inline-block;
+    margin-top: 0.7rem;
+    background: #0071e3;
+    color: white;
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  a.apply-link:hover, a.apply-link:focus {
+    background-color: #005bb5;
+    outline: none;
+  }
+
+  /* Tutoring form */
+  form {
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-top: 1.4rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  input, select, textarea {
+    padding: 0.6rem 0.8rem;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1.8px solid #ccc;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    resize: vertical;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #0071e3;
+    outline: none;
+  }
+  button {
+    margin-top: 2rem;
+    background: #0071e3;
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s;
+  }
+  button:hover, button:focus {
+    background-color: #005bb5;
+    outline: none;
+  }
+
+  /* Community & Research posts */
+  .initiative, .qa-item {
+    background: #f5faff;
+    padding: 1.4rem 1.8rem;
+    margin: 1.2rem 0;
+    border-radius: 10px;
+    border-left: 6px solid #0071e3;
+    box-shadow: 0 2px 12px rgba(0, 113, 227, 0.15);
+  }
+  .initiative h3, .qa-item strong {
+    margin-top: 0;
+    color: #003366;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .category-label {
+    font-style: italic;
+    color: #0071e3;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  .qa-item strong {
+    color: #0071e3;
+  }
+  .qa-item em {
+    color: #666;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
     nav {
-      background: #0066cc;
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 0.8rem 0;
-      position: sticky;
-      top: 56px; /* height of header */
-      z-index: 999;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 3px;
-      transition: background-color 0.3s;
-    }
-    nav a:hover {
-      background-color: #004080;
+      flex-direction: column;
+      gap: 0.8rem;
     }
     main {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: white;
-      padding: 1.5rem 2rem;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      border-radius: 6px;
+      margin: 2rem 1rem 3rem;
+      padding: 1.5rem 1.5rem;
     }
-    section {
-      margin-bottom: 3rem;
-    }
-    h2 {
-      color: #004080;
-      border-bottom: 3px solid #004080;
-      padding-bottom: 0.3rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Scholarships */
-    ul.scholarship-list {
-      list-style: none;
-      padding-left: 0;
-    }
-    ul.scholarship-list li {
-      background: #e6f0ff;
-      margin: 0.7rem 0;
-      padding: 1rem;
-      border-radius: 6px;
-    }
-    a.apply-link {
-      display: inline-block;
-      margin-top: 0.5rem;
-      background: #004080;
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      text-decoration: none;
-      transition: background-color 0.3s;
-    }
-    a.apply-link:hover {
-      background-color: #002f66;
-    }
-
-    /* Tutoring form */
     form {
-      max-width: 450px;
-      display: flex;
-      flex-direction: column;
+      max-width: 100%;
     }
-    label {
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      resize: vertical;
-    }
-    button {
-      margin-top: 1.5rem;
-      background: #004080;
-      color: white;
-      border: none;
-      padding: 0.7rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #003060;
-    }
-
-    /* Community & Research posts */
-    .post {
-      background: #f0f7ff;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 5px;
-      border-left: 5px solid #004080;
-    }
-    .post h3 {
-      margin-top: 0;
-      color: #003366;
-    }
-
-    /* Q&A */
-    .qa-item {
-      background: #e9f1ff;
-      padding: 1rem;
-      border-radius: 6px;
-      margin: 0.8rem 0;
-    }
-    .qa-item strong {
-      color: #004080;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      main {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      form {
-        max-width: 100%;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Student Portal</h1>
+  Student Portal
 </header>
 
-<nav>
+<nav role="navigation" aria-label="Primary navigation">
   <a href="#scholarships">Scholarships</a>
   <a href="#tutoring">Online Tutoring</a>
   <a href="#community">Community & Research</a>
@@ -174,30 +202,43 @@
 </nav>
 
 <main>
-  <section id="scholarships">
+  <!-- Scholarships Section -->
+  <section id="scholarships" aria-label="Scholarships section">
     <h2>Scholarships</h2>
     <ul class="scholarship-list">
       <li>
-        <strong>Academic Excellence Scholarship</strong><br />
-        Awarded to students with outstanding academic records.<br />
-        <a href="https://example.com/apply/academic" target="_blank" class="apply-link">Apply Now</a>
+        <strong>Gates Scholarship</strong><br />
+        A highly selective, full scholarship for exceptional, Pell-eligible, minority high school seniors.<br />
+        <a href="https://www.thegatesscholarship.org/" target="_blank" rel="noopener" class="apply-link" aria-label="Apply for Gates Scholarship">Apply Now</a>
       </li>
       <li>
-        <strong>STEM Innovators Grant</strong><br />
-        For students pursuing studies in Science, Technology, Engineering, and Math.<br />
-        <a href="https://example.com/apply/stem" target="_blank" class="apply-link">Apply Now</a>
+        <strong>Coca-Cola Scholars Program</strong><br />
+        Recognizes students who demonstrate leadership, commitment to community, and academic excellence.<br />
+        <a href="https://www.coca-colascholarsfoundation.org/apply/" target="_blank" rel="noopener" class="apply-link" aria-label="Apply for Coca-Cola Scholars Program">Apply Now</a>
       </li>
       <li>
-        <strong>Community Service Award</strong><br />
-        Recognizes students actively involved in community service.<br />
-        <a href="https://example.com/apply/community" target="_blank" class="apply-link">Apply Now</a>
+        <strong>Horatio Alger Scholarship</strong><br />
+        For students who have overcome adversity and demonstrate financial need.<br />
+        <a href="https://scholars.horatioalger.org/" target="_blank" rel="noopener" class="apply-link" aria-label="Apply for Horatio Alger Scholarship">Apply Now</a>
+      </li>
+      <li>
+        <strong>Jack Kent Cooke Foundation College Scholarship</strong><br />
+        For high-achieving high school seniors with financial need.<br />
+        <a href="https://www.jkcf.org/our-scholarships/college-scholarship-program/" target="_blank" rel="noopener" class="apply-link" aria-label="Apply for Jack Kent Cooke Scholarship">Apply Now</a>
+      </li>
+      <li>
+        <strong>AXA Achievement Scholarship</strong><br />
+        For students who demonstrate ambition, drive, and determination to achieve their goals.<br />
+        <a href="https://us.axa.com/axa-foundation/AXA-achievement-scholarship.html" target="_blank" rel="noopener" class="apply-link" aria-label="Apply for AXA Achievement Scholarship">Apply Now</a>
       </li>
     </ul>
   </section>
 
-  <section id="tutoring">
+  <!-- Tutoring Section -->
+  <section id="tutoring" aria-label="Online Tutoring application form">
     <h2>Online Tutoring Application</h2>
-    <form onsubmit="alert('Thank you for applying for tutoring! We will contact you soon.'); return false;">
+    <form id="tutoringForm" onsubmit="alert('Thank you for applying for tutoring! We will contact you soon.'); return false;" aria-live="polite" aria-describedby="tutoringFormInstructions">
+      <p id="tutoringFormInstructions">Fill the form below to apply for online tutoring.</p>
       <label for="name">Full Name</label>
       <input type="text" id="name" name="name" required placeholder="Your full name" />
 
@@ -223,39 +264,141 @@
     </form>
   </section>
 
-  <section id="community">
+  <!-- Community & Research Section -->
+  <section id="community" aria-label="Community Initiatives and Research posts">
     <h2>Community Initiatives & Research</h2>
-    <div class="post">
-      <h3>Green Campus Initiative</h3>
-      <p>Join us in making our campus greener! Participate in tree planting and sustainability workshops.</p>
-    </div>
-    <div class="post">
-      <h3>Undergraduate Research Symposium 2025</h3>
-      <p>Students present their research projects. Submit your abstracts by August 15.</p>
-    </div>
-    <div class="post">
-      <h3>Volunteer Tutoring Program</h3>
-      <p>Help your peers by volunteering as a tutor for high school students in your community.</p>
+    <form id="initiativeForm" aria-live="polite" aria-describedby="initiativeFormInstructions">
+      <p id="initiativeFormInstructions">Post your community initiative or research below.</p>
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required placeholder="Initiative title" />
+
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select a category</option>
+        <option value="Research">Research</option>
+        <option value="Volunteer Hours">Volunteer Hours</option>
+        <option value="Events">Events</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="4" required placeholder="Describe your initiative"></textarea>
+
+      <button type="submit">Post Initiative</button>
+    </form>
+
+    <div id="initiativesList" aria-live="polite" aria-atomic="true" aria-relevant="additions">
+      <div class="initiative" tabindex="0">
+        <h3>Green Campus Initiative</h3>
+        <div class="category-label">Category: Volunteer Hours</div>
+        <p>Join us in making our campus greener! Participate in tree planting and sustainability workshops.</p>
+      </div>
+      <div class="initiative" tabindex="0">
+        <h3>Undergraduate Research Symposium 2025</h3>
+        <div class="category-label">Category: Research</div>
+        <p>Students present their research projects. Submit your abstracts by August 15.</p>
+      </div>
     </div>
   </section>
 
-  <section id="qna">
+  <!-- Q&A Section -->
+  <section id="qna" aria-label="College Admissions Q&A">
     <h2>College Admissions Q&A</h2>
-    <div class="qa-item">
-      <strong>Q:</strong> When is the application deadline for Fall 2025 admissions?<br />
-      <strong>A:</strong> The deadline is January 15, 2025.
-    </div>
-    <div class="qa-item">
-      <strong>Q:</strong> What documents are required for the application?<br />
-      <strong>A:</strong> You need your transcripts, test scores, recommendation letters, and a personal essay.
-    </div>
-    <div class="qa-item">
-      <strong>Q:</strong> Is financial aid available for international students?<br />
-      <strong>A:</strong> Yes, there are scholarships and grants specifically for international applicants.
+    <form id="qaForm" aria-live="polite" aria-describedby="qaFormInstructions">
+      <p id="qaFormInstructions">Ask a question or provide an answer about college admissions.</p>
+      <label for="question">Your Question</label>
+      <textarea id="question" name="question" rows="2" required placeholder="Ask a question about college admissions"></textarea>
+
+      <label for="answer">Your Answer (optional)</label>
+      <textarea id="answer" name="answer" rows="3" placeholder="Provide an answer if you want"></textarea>
+
+      <button type="submit">Post Q&A</button>
+    </form>
+
+    <div id="qaList" aria-live="polite" aria-atomic="true" aria-relevant="additions">
+      <div class="qa-item" tabindex="0">
+        <strong>Q:</strong> When is the application deadline for Fall 2025 admissions?<br />
+        <strong>A:</strong> The deadline is January 15, 2025.
+      </div>
+      <div class="qa-item" tabindex="0">
+        <strong>Q:</strong> What documents are required for the application?<br />
+        <strong>A:</strong> You need your transcripts, test scores, recommendation letters, and a personal essay.
+      </div>
+      <div class="qa-item" tabindex="0">
+        <strong>Q:</strong> Is financial aid available for international students?<br />
+        <strong>A:</strong> Yes, there are scholarships and grants specifically for international applicants.
+      </div>
     </div>
   </section>
 </main>
 
+<script>
+  // Community Initiative Posting
+  const initiativeForm = document.getElementById('initiativeForm');
+  const initiativesList = document.getElementById('initiativesList');
+
+  initiativeForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const title = initiativeForm.title.value.trim();
+    const category = initiativeForm.category.value;
+    const description = initiativeForm.description.value.trim();
+
+    if (!title || !category || !description) return;
+
+    const div = document.createElement('div');
+    div.className = 'initiative';
+    div.tabIndex = 0;
+    div.innerHTML = `
+      <h3>${escapeHtml(title)}</h3>
+      <div class="category-label">Category: ${escapeHtml(category)}</div>
+      <p>${escapeHtml(description)}</p>
+    `;
+    initiativesList.appendChild(div);
+
+    initiativeForm.reset();
+  });
+
+  // Q&A Posting
+  const qaForm = document.getElementById('qaForm');
+  const qaList = document.getElementById('qaList');
+
+  qaForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const question = qaForm.question.value.trim();
+    const answer = qaForm.answer.value.trim();
+
+    if (!question) return;
+
+    const div = document.createElement('div');
+    div.className = 'qa-item';
+    div.tabIndex = 0;
+
+    div.innerHTML = `<strong>Q:</strong> ${escapeHtml(question)}<br />`;
+    if (answer) {
+      div.innerHTML += `<strong>A:</strong> ${escapeHtml(answer)}`;
+    } else {
+      div.innerHTML += `<em>No answer yet.</em>`;
+    }
+
+    qaList.appendChild(div);
+
+    qaForm.reset();
+  });
+
+  // Simple helper to escape HTML to avoid injection in user input
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+</script>
+
 </body>
 </html>
-
