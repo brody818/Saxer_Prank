@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voice Recognition</title>
+    <title>Voice Recognition with Emotion Detection</title>
 </head>
 <body>
     <h1>Voice Recognition</h1>
@@ -9,21 +9,47 @@
     <button class="stop-btn">Stop Recording</button>
     <div id="status"></div>
     <div id="output"></div>
+    <div id="emotion"></div>
     
     <script>
         const button = document.querySelector('.btn');
         const stopButton = document.querySelector('.stop-btn');
         const status = document.getElementById('status');
         const output = document.getElementById('output');
+        const emotionDiv = document.getElementById('emotion');
+
         let recognition;
         let isRecording = false;
         let transcribedText = '';
+
+        // Simple emotion keywords dictionary
+        const emotions = {
+            happy: ["happy", "glad", "great", "joy", "awesome", "fantastic", "excited", "love", "amazing"],
+            sad: ["sad", "upset", "down", "unhappy", "depressed", "gloomy", "cry"],
+            angry: ["angry", "mad", "furious", "annoyed", "irritated", "hate"],
+            fear: ["scared", "afraid", "fear", "terrified", "nervous", "worried"],
+            surprise: ["surprised", "shocked", "amazed", "astonished"]
+        };
+
+        function detectEmotion(text) {
+            const detected = [];
+            text = text.toLowerCase();
+
+            for (let emotion in emotions) {
+                for (let word of emotions[emotion]) {
+                    if (text.includes(word)) {
+                        detected.push(emotion);
+                        break;
+                    }
+                }
+            }
+            return detected.length ? detected.join(', ') : 'Neutral';
+        }
 
         // Check if the browser supports Speech Recognition
         if (!('webkitSpeechRecognition' in window)) {
             alert('Sorry, your browser does not support Speech Recognition.');
         } else {
-            // Initialize SpeechRecognition object
             recognition = new webkitSpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
@@ -31,16 +57,15 @@
 
             recognition.onresult = function(event) {
                 let result = event.results[event.results.length - 1];
-                let transcript = result[0].transcript.toLowerCase(); // Convert to lowercase for easier comparison
+                let transcript = result[0].transcript;
 
                 if (result.isFinal) {
                     transcribedText += transcript + ' ';
-                    output.textContent = transcribedText; 
+                    output.textContent = transcribedText;
 
-                    // Check for "ok" or "okay" and stop recognition
-                    if (transcript.includes("ok") || transcript.includes("okay")) {
-                        stopRecognition("Detected 'ok' or 'okay'. Stopping recognition...");
-                    }
+                    // Detect emotion on the latest final transcript chunk
+                    const detectedEmotions = detectEmotion(transcript);
+                    emotionDiv.textContent = "Detected Emotion: " + detectedEmotions;
                 } else {
                     output.textContent = transcribedText + transcript;
                 }
@@ -48,6 +73,7 @@
 
             recognition.onerror = function(event) {
                 console.error('Speech recognition error:', event.error);
+                status.textContent = 'Error: ' + event.error;
             };
 
             recognition.onend = function() {
@@ -57,17 +83,16 @@
             };
         }
 
-        // Function to start recognition
         function startRecognition() {
             isRecording = true;
             button.textContent = 'Recording...';
             status.textContent = 'Listening...';
-            transcribedText = '';  
-            output.textContent = '';  
+            transcribedText = '';
+            output.textContent = '';
+            emotionDiv.textContent = '';
             recognition.start();
         }
 
-        // Function to stop recognition
         function stopRecognition(message = 'Recording stopped manually.') {
             if (isRecording) {
                 recognition.stop();
@@ -77,7 +102,6 @@
             }
         }
 
-        // Button click events
         button.addEventListener('click', () => {
             if (!isRecording) {
                 startRecognition();
