@@ -24,13 +24,37 @@
 
         // Simple emotion keywords dictionary
         const emotions = {
-            happy: ["happy", "glad", "great", "joy", "awesome", "fantastic", "excited", "love", "amazing"],
-            sad: ["sad", "upset", "down", "unhappy", "depressed", "gloomy", "cry"],
-            angry: ["angry", "mad", "furious", "annoyed", "irritated", "hate"],
-            fear: ["scared", "afraid", "fear", "terrified", "nervous", "worried"],
-            surprise: ["surprised", "shocked", "amazed", "astonished"]
-        };
-
+    happy: [
+        "happy", "glad", "great", "joy", "joyful", "joyous", "awesome", "fantastic", "excited",
+        "love", "amazing", "delighted", "cheerful", "cheery", "content", "ecstatic", "elated",
+        "euphoric", "gleeful", "good", "jolly", "laughing", "lively", "merry", "optimistic",
+        "overjoyed", "peppy", "pleasant", "pleased", "radiant", "refreshed", "relaxed",
+        "satisfied", "smiling", "sunny", "thankful", "thrilled", "vibrant", "vivacious", "wonderful"
+    ],
+    sad: [
+        "sad", "upset", "down", "unhappy", "depressed", "gloomy", "cry", "mournful", "heartbroken",
+        "sorrowful", "somber", "melancholy", "blue", "downcast", "disappointed", "distressed",
+        "forlorn", "grief", "grieving", "heartache", "hopeless", "low", "lonely", "miserable",
+        "regretful", "tearful", "tragic", "woeful", "worried", "pain", "hurt", "broken"
+    ],
+    angry: [
+        "angry", "mad", "furious", "annoyed", "irritated", "hate", "outraged", "resentful",
+        "aggravated", "agitated", "bitter", "cross", "displeased", "enraged", "exasperated",
+        "fuming", "grumpy", "hostile", "indignant", "infuriated", "irate", "irritable",
+        "mad", "offended", "peeved", "pissed", "provoked", "raging", "sore", "upset", "wrathful"
+    ],
+    fear: [
+        "scared", "afraid", "fear", "terrified", "nervous", "worried", "anxious", "apprehensive",
+        "alarmed", "anxious", "cautious", "concerned", "cowardly", "dreadful", "fearful",
+        "frightened", "hesitant", "jittery", "panic", "panicked", "shaky", "startled",
+        "stressed", "timid", "trepidation", "uneasy", "unnerved", "wary", "worried"
+    ],
+    surprise: [
+        "surprised", "shocked", "amazed", "astonished", "astounded", "bewildered", "confused",
+        "dumbfounded", "flabbergasted", "stunned", "startled", "staggered", "stunned",
+        "taken aback", "unbelievable", "wonderstruck", "wow"
+        ]
+        }
         function detectEmotion(text) {
             const detected = [];
             text = text.toLowerCase();
