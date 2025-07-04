@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Portal</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+    header {
+      background: #004080;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav {
+      background: #0066cc;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0.8rem 0;
+      position: sticky;
+      top: 56px; /* height of header */
+      z-index: 999;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #004080;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      border-radius: 6px;
+    }
+    section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      color: #004080;
+      border-bottom: 3px solid #004080;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Scholarships */
+    ul.scholarship-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    ul.scholarship-list li {
+      background: #e6f0ff;
+      margin: 0.7rem 0;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    a.apply-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background: #004080;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    a.apply-link:hover {
+      background-color: #002f66;
+    }
+
+    /* Tutoring form */
+    form {
+      max-width: 450px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+    button {
+      margin-top: 1.5rem;
+      background: #004080;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #003060;
+    }
+
+    /* Community & Research posts */
+    .post {
+      background: #f0f7ff;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 5px;
+      border-left: 5px solid #004080;
+    }
+    .post h3 {
+      margin-top: 0;
+      color: #003366;
+    }
+
+    /* Q&A */
+    .qa-item {
+      background: #e9f1ff;
+      padding: 1rem;
+      border-radius: 6px;
+      margin: 0.8rem 0;
+    }
+    .qa-item strong {
+      color: #004080;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      main {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      form {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Student Portal</h1>
+</header>
+
+<nav>
+  <a href="#scholarships">Scholarships</a>
+  <a href="#tutoring">Online Tutoring</a>
+  <a href="#community">Community & Research</a>
+  <a href="#qna">College Admissions Q&A</a>
+</nav>
+
+<main>
+  <section id="scholarships">
+    <h2>Scholarships</h2>
+    <ul class="scholarship-list">
+      <li>
+        <strong>Academic Excellence Scholarship</strong><br />
+        Awarded to students with outstanding academic records.<br />
+        <a href="https://example.com/apply/academic" target="_blank" class="apply-link">Apply Now</a>
+      </li>
+      <li>
+        <strong>STEM Innovators Grant</strong><br />
+        For students pursuing studies in Science, Technology, Engineering, and Math.<br />
+        <a href="https://example.com/apply/stem" target="_blank" class="apply-link">Apply Now</a>
+      </li>
+      <li>
+        <strong>Community Service Award</strong><br />
+        Recognizes students actively involved in community service.<br />
+        <a href="https://example.com/apply/community" target="_blank" class="apply-link">Apply Now</a>
+      </li>
+    </ul>
+  </section>
+
+  <section id="tutoring">
+    <h2>Online Tutoring Application</h2>
+    <form onsubmit="alert('Thank you for applying for tutoring! We will contact you soon.'); return false;">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required placeholder="Your full name" />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com" />
+
+      <label for="subject">Subject you want tutoring in</label>
+      <select id="subject" name="subject" required>
+        <option value="" disabled selected>Select subject</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>English</option>
+        <option>Computer Science</option>
+        <option>Other</option>
+      </select>
+
+      <label for="details">Additional Details (optional)</label>
+      <textarea id="details" name="details" rows="4" placeholder="Tell us more about your tutoring needs..."></textarea>
+
+      <button type="submit">Apply for Tutoring</button>
+    </form>
+  </section>
+
+  <section id="community">
+    <h2>Community Initiatives & Research</h2>
+    <div class="post">
+      <h3>Green Campus Initiative</h3>
+      <p>Join us in making our campus greener! Participate in tree planting and sustainability workshops.</p>
+    </div>
+    <div class="post">
+      <h3>Undergraduate Research Symposium 2025</h3>
+      <p>Students present their research projects. Submit your abstracts by August 15.</p>
+    </div>
+    <div class="post">
+      <h3>Volunteer Tutoring Program</h3>
+      <p>Help your peers by volunteering as a tutor for high school students in your community.</p>
+    </div>
+  </section>
+
+  <section id="qna">
+    <h2>College Admissions Q&A</h2>
+    <div class="qa-item">
+      <strong>Q:</strong> When is the application deadline for Fall 2025 admissions?<br />
+      <strong>A:</strong> The deadline is January 15, 2025.
+    </div>
+    <div class="qa-item">
+      <strong>Q:</strong> What documents are required for the application?<br />
+      <strong>A:</strong> You need your transcripts, test scores, recommendation letters, and a personal essay.
+    </div>
+    <div class="qa-item">
+      <strong>Q:</strong> Is financial aid available for international students?<br />
+      <strong>A:</strong> Yes, there are scholarships and grants specifically for international applicants.
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
+
